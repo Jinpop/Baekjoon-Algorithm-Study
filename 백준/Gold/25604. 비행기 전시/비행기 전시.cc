@@ -29,12 +29,11 @@ int main()
     {
         // 부품분해기다리기---------------------------------------------------------------------
         // 현재 지점에 부품이 있고 준비된게 없는 경우
-        if (q[cur_pos].empty())
-        {
-            cur_t+=t;
-            cur_pos=!cur_pos;
-            continue;
-        }
+        // if (q[cur_pos].empty())
+        // {
+        //     cur_t+=t;
+        //     cur_pos=!cur_pos;
+        // }
 
         if (!q[cur_pos].empty() && q[cur_pos].front().second.second > cur_t)
         {
