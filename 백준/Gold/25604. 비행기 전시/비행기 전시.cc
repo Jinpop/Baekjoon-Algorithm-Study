@@ -1,111 +1,105 @@
 #include <iostream>
-#include <string>
-#include <set>
 #include <queue>
 #include <map>
 using namespace std;
 
-typedef struct line
-{
-    int number;
-    int weight;
-    int arrive;
-} l;
-
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+    cin.tie(0);
+    cout.tie(0);
+    ios::sync_with_stdio(0);
 
     int n, m, t;
     cin >> n >> m >> t;
 
-    queue<l> q[2];
+    queue<pair<int, pair<int, int>>> q[2];
+    map<int, pair<int, int>> map;
 
     for (int i = 0; i < n; i++)
     {
-        l temp_l;
-        bool d;
-        cin >> d >> temp_l.weight >> temp_l.arrive;
-        temp_l.number = i;
-        q[d].push(temp_l);
+        int temp1, temp2, temp3;
+        cin >> temp1 >> temp2 >> temp3;
+        q[temp1].push({i, {temp2, temp3}});
     }
 
-    bool pos = 0;
-    int time = 0;
-    int wei = 0;
-    map<int, pair<int, int>> result;
-
-    while (!q[pos].empty() || !q[!pos].empty())
+    int cur_t = 0;
+    bool cur_pos = 0;
+    int cur_wei = 0;
+    while (q[0].size() || q[1].size())
     {
-        // 현재 지점에 이동시킬 부품이 없을 경우 반대로 넘어가고
-        // 현재 지점에 준비된 부품이 없는데 반대 지점엔 준비된 부품이 있을 경우 넘어감.
-        if (q[pos].empty() || q[pos].front().arrive > time && !q[!pos].empty() && q[!pos].front().arrive <= time)
+        // 부품분해기다리기---------------------------------------------------------------------
+        // 현재 지점에 부품이 있고 준비된게 없는 경우
+        if (q[cur_pos].empty())
         {
-            time += t;
-            pos = !pos;
-        }
-        // 양 쪽 지점에 모두 준비된 부품이 없는 경우
-        if (!q[pos].empty() && !q[!pos].empty() && q[pos].front().arrive > time && q[!pos].front().arrive > time)
-        {
-            // 현재 지점의 부품 준비가 더 빠른 경우 준비를 기다림.
-            if (q[pos].front().arrive <= q[!pos].front().arrive)
-            {
-                time = q[pos].front().arrive;
-            }
-            // 반대 지점이 빠른 경우 준비가 된 뒤 이동함.
-            else
-            {
-                time = q[!pos].front().arrive + t;
-                pos = !pos;
-            }
-        }
-        // 반대 지점에 부품이 아예 없고 현재 지점에 준비된 부품이 없는 경우
-        if (q[pos].front().arrive > time)
-        {
-            time = q[pos].front().arrive;
+            cur_t+=t;
+            cur_pos=!cur_pos;
+            continue;
         }
 
-        // 이 시점에서 현재 위치에 준비된 부품은 반드시 존재함.
-        while (wei < m && !q[pos].empty() && q[pos].front().arrive <= time)
+        if (!q[cur_pos].empty() && q[cur_pos].front().second.second > cur_t)
         {
-            // 분할 없이 싣는 경우
-            if (q[pos].front().weight + wei <= m)
+            // 반대 지점 큐가 비었거나 현재 지점의 준비가 더 빠른 경우
+            if (q[!cur_pos].empty() || q[cur_pos].front().second.second <= q[!cur_pos].front().second.second)
             {
-                wei += q[pos].front().weight;
-                // 이전에 분할해서 실은 적이 없는 경우
-                if (result.find(q[pos].front().number) == result.end())
-                {
-                    result[q[pos].front().number] = {time, time + t};
-                }
-                // 분할되어 있던 부품의 경우 도착 시점만 바꿔준다.
-                else
-                {
-                    result[q[pos].front().number].second = time + t;
-                }
-                q[pos].pop();
+                cur_t = q[cur_pos].front().second.second;
             }
-            // 부품을 분할하는 경우
-            else
+            // 반대 지점은 준비가 되어 있는 경우
+            else if (q[cur_pos].front().second.second > cur_t && q[!cur_pos].front().second.second <= cur_t)
             {
-                q[pos].front().weight -= (m - wei);
-                wei = m;
-                // 이전에 분할해서 실은 적이 없는 경우에만 시작 시간을 체크함
-                if (result.find(q[pos].front().number) == result.end())
-                {
-                    result[q[pos].front().number] = {time, 0};
-                }
+                cur_pos = !cur_pos;
+                cur_t+=t;
+            }
+            // 반대 지점의 준비 속도가 더 빠른 경우
+            else 
+            {
+                cur_pos = !cur_pos;
+                cur_t = q[cur_pos].front().second.second + t;
             }
         }
 
-        // 이동
-        pos = !pos;
-        wei = 0;
-        time += t;
+        // 부품싣기-----------------------------------------------------------------------
+        //  최대 적재량 만큼 싣는다.
+        vector<int> temp_order;
+        vector<pair<int,int>> temp_container;
+        while (!q[cur_pos].empty() && q[cur_pos].front().second.second <= cur_t && cur_wei < m)
+        {
+            // 부품을 한번에 이동할 수 있는 경우.
+            if (q[cur_pos].front().second.first <= m - cur_wei)
+            {
+                cur_wei += q[cur_pos].front().second.first;
+                temp_order.push_back(q[cur_pos].front().first);
+                q[cur_pos].pop();
+            }
+            // 부품을 분해하는 경우
+            else
+            {
+                q[cur_pos].front().second.first -= (m - cur_wei);
+                cur_wei = m;
+                temp_order.push_back(q[cur_pos].front().first);
+                break;
+            }
+        }
+
+        // 부품을이동시킨다-----------------------------------------------------------------------
+        int before_t = cur_t;
+        cur_pos = !cur_pos;
+        cur_t += t;
+        cur_wei = 0;
+        for (int ele : temp_order)
+        {
+            // 분할해서 보낸 경우
+            if (map.find(ele) != map.end())
+            {
+                map[ele].second = cur_t;
+            }
+            else
+            {
+                map.insert({ele, {before_t, cur_t}});
+            }
+        }
     }
 
-    for (auto ele : result)
+    for (auto ele : map)
     {
         cout << ele.second.first << " " << ele.second.second << "\n";
     }
