@@ -1,6 +1,7 @@
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <string>
+
 using namespace std;
 
 int main()
@@ -9,30 +10,32 @@ int main()
     cout.tie(0);
     ios_base::sync_with_stdio(0);
 
-    int n;
-    cin >> n;
+    int t;
 
-    for (int i = 0; i < n; i++)
+    cin >> t;
+
+    for (int i = 0; i < t; i++)
     {
-        int m;
-        cin >> m;
+        std::map<string, int> closet;
+        int n;
+        int sum = 1;
 
-        unordered_map<string, int> category;
-        for (int j = 0; j < m; j++)
+        cin >> n;
+
+        for (int i = 0; i < n; i++)
         {
-            string temp;
-            cin >> temp >> temp;
-            category[temp]++;
+            string x, y;
+            cin >> x >> y;
+
+            closet[y]++;
         }
 
-        int result = 1;
-        for (pair<string, int> ele : category)
+        for (const auto &pair : closet)
         {
-            result *= ele.second + 1;
+            sum *= (pair.second + 1);
         }
 
-        cout << result - 1 << "\n";
+        cout << sum - 1 << "\n";
     }
-
     return 0;
 }
