@@ -15,6 +15,7 @@ void check(int n, int x, int y)
             if (num[i][j] != num[x][y])
             {
                 right = 0;
+                break;
             }
         }
     }
