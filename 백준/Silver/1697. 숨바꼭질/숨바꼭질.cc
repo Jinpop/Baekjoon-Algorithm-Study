@@ -6,7 +6,7 @@
 #include <algorithm>
 using namespace std;
 
-set<int> isvisited;
+bool isvisited[500001];
 
 void bfs(queue<int> q, int k)
 {
@@ -26,19 +26,19 @@ void bfs(queue<int> q, int k)
             }
             else
             {
-                if (isvisited.count(temp - 1) == 0)
+                if (temp - 1 > -1 && isvisited[temp - 1] == 0)
                 {
-                    isvisited.insert(temp - 1);
+                    isvisited[temp - 1] = 1;
                     q.push(temp - 1);
                 }
-                if (isvisited.count(temp + 1) == 0)
+                if (isvisited[temp + 1] == 0)
                 {
-                    isvisited.insert(temp + 1);
+                    isvisited[temp + 1] = 1;
                     q.push(temp + 1);
                 }
-                if (isvisited.count(temp * 2) == 0 && temp * 2 <= k + 2)
+                if ( isvisited[temp * 2] == 0 && temp * 2 <= k + 2)
                 {
-                    isvisited.insert(temp * 2);
+                    isvisited[temp * 2] = 1;
                     q.push(temp * 2);
                 }
             }
