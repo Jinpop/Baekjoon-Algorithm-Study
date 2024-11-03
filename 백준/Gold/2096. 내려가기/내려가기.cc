@@ -13,7 +13,9 @@ int main()
     int n;
     cin >> n;
 
-    int p[n][3];
+    int p[100000][3];
+    int a[100000][3];
+    int b[n][3];
 
     int max_dp[3];
     int min_dp[3];
