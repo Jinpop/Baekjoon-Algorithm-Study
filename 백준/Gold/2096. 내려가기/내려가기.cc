@@ -13,6 +13,8 @@ int main()
     int n;
     cin >> n;
 
+    int p[n][3];
+
     int max_dp[3];
     int min_dp[3];
     cin >> max_dp[0] >> max_dp[1] >> max_dp[2];
