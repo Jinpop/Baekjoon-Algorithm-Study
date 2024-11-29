@@ -52,11 +52,7 @@ int main()
         i++;
     }
 
-    if (result >= k)
-    {
-        cout << 0;
-        return 0;
-    }
+
 
     cout << k - result;
 
