@@ -10,7 +10,7 @@
 #include <cstring>
 using namespace std;
 
-int dp[15][15];
+int dp[17][17];
 
 int main()
 {
@@ -21,44 +21,46 @@ int main()
     int n, m, k;
     cin >> n >> m >> k;
 
-    int x = k / m;
-    int y = (k - 1) % m;
+    bool check;
 
-    if (k == 0)
+    int x = (k - 1) / m + 1;
+    int y = (k - 1) % m + 1;
+
+    if (!y)
+        y = 1;
+
+    dp[0][1] = 1;
+
+    // cout << x << " " << y << " x y\n";
+
+    for (int i = 1; i <= x; i++)
     {
-        y = 0;
-    }
-
-    dp[0][0] = 1;
-
-    for (int i = 0; i <= x; i++)
-    {
-        for (int j = 0; j <= y; j++)
+        for (int j = 1; j <= y; j++)
         {
-            dp[i][j + 1] += dp[i][j];
-            dp[i + 1][j] += dp[i][j];
+            dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
         }
     }
 
     int result = dp[x][y];
 
-    for (int i = 0; i < n; i++)
-    {
-        memset(dp[i], 0, sizeof(int) * m);
-    }
+    memset(dp, 0, sizeof(dp));
 
-    dp[x][y] = 1;
+    dp[x][y - 1] = 1;
 
     for (int i = x; i <= n; i++)
     {
         for (int j = y; j <= m; j++)
         {
-            dp[i][j + 1] += dp[i][j];
-            dp[i + 1][j] += dp[i][j];
+            dp[i][j] = dp[i][j - 1] + dp[i - 1][j];
         }
     }
 
-    cout << result * dp[n - 1][m - 1] << "\n";
+    if (dp[n][m] == 0)
+    {
+        dp[n][m] = 1;
+    }
+
+    cout << result * dp[n][m] << "\n";
 
     return 0;
 }
