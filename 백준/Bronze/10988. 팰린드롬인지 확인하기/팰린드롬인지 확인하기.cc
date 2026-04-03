@@ -1,29 +1,23 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
+
+typedef long long ll;
+typedef pair<ll, ll> pll;
+typedef pair<int, int> pii;
+
+#define F(i, n) for (ll i = 1; i <= n; i++)
+#define fastio cin.tie(0)->sync_with_stdio(0)
+#define INF 1e9
+#define MX 1
 
 int main()
 {
-    cin.tie(0);
-    cout.tie(0);
-    ios_base::sync_with_stdio(0);
+    fastio;
 
-    string n, m = "";
+    string n, m;
     cin >> n;
-
-    for (auto i = n.rbegin(); i != n.rend(); i++)
-    {
-        m.push_back(*i);
-    }
-
-
-    if (n == m)
-    {
-        cout << 1;
-    }
-    else {
-        cout << 0;
-    }
+    m = n, reverse(n.begin(), n.end());
+    cout << (n == m);
 
     return 0;
 }
