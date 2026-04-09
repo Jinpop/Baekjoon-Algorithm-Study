@@ -1,51 +1,48 @@
 #include <iostream>
 #include <stack>
 #include <string>
+#include <sstream>
 using namespace std;
 
-int main(){
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
+int main()
+{
+    cin.tie(0);
+    cout.tie(0);
+    ios_base::sync_with_stdio(0);
 
-  int n;
-  cin >> n;
-  for (int i = 0; i < n; i++){
-    string s;
-    stack<char> st;
-    cin >> s;
-    
-    for (int j = 0; j < s.length(); j++){
-      if (st.empty())
-      {
-        if (s[j]==')')
+    int n;
+    cin >> n;
+
+    while (n--)
+    {
+        string temp;
+        cin >> temp;
+
+        stack<char> s;
+
+        for (int i = 0; i < temp.size(); i++)
         {
-          st.push('N');
-          break;
+
+            if (temp[i] == '(')
+            {
+                s.push('(');
+            }
+            else
+            {
+                if (s.empty())
+                {
+                    s.push('f');
+                    break;
+                }
+                s.pop();
+            }
         }
+
+        if (s.empty())
+            cout << "YES\n";
         else
-        {
-          st.push(s[j]);
-        }
-      }
-      else {
-        if (st.top() == s[j]){
-          st.push(s[j]);
-        }
-        else{
-          st.pop();
-        }
-      }
+            cout << "NO\n";
     }
 
-    if (st.empty()){
-      cout << "YES" << "\n";
-    }
-    else {
-      cout << "NO" << "\n";
-    }
-
-  }
-
-  return 0;
+    return 0;
 }
-
