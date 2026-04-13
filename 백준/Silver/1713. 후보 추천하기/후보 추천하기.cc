@@ -12,17 +12,6 @@ typedef pair<long double, int> pdi;
 #define MX 101
 
 pii cnt[MX];
-bool compare(pair<pii, int> a, pair<pii, int> b)
-{
-    if (a.first.first < b.first.first)
-        return 1;
-    if (a.first.first > b.first.first)
-        return 0;
-
-    if (a.first.second < b.first.second)
-        return 1;
-    return 0;
-}
 
 int main()
 {
@@ -47,7 +36,7 @@ int main()
             if (cnt[i].first >= 1)
                 v.push_back({cnt[i], i});
 
-            sort(v.begin(), v.end(), compare);
+            sort(v.begin(), v.end());
             cnt[v[0].second] = {0, 0};
             total--;
         }
